@@ -61,24 +61,26 @@ def contains_label(labels: pd.Series, label: str) -> pd.Series:
 
 
 
-import pandas as pd
-
 def get_correlation(labels: pd.Series, label_1: str, label_2: str) -> float:
-    """
-    Créez une fonction qui, avec une pandas Series comme décrit ci-dessus, renvoie la proportion de rangées
-    avec label_1 qui ont également label_2.
-    """
-    # Filtrer les lignes contenant label_1
-    label_1_rows = contains_label(labels, label_1)
-    
-    # Filtrer les lignes contenant label_2 parmi celles qui contiennent label_1
-    label_2_in_label_1_rows = contains_label(label_1_rows, label_2)
-    
-    # Calculer la proportion de lignes avec label_1 qui contiennent également label_2
-    if len(label_1_rows) == 0:
-        return 0.0
-    
-    return len(label_2_in_label_1_rows) / len(label_1_rows)
+    # Vérifie que les étiquettes ne sont pas None
+    if labels is None or label_1 is None or label_2 is None:
+        raise ValueError("Les arguments ne doivent pas être None.")
+
+    # Vérifier la présence des labels dans la série
+    if not all(labels.isin([label_1, label_2])):
+        raise ValueError(f"Erreur : Les étiquettes '{label_1}' ou '{label_2}' ne sont pas présentes dans la série.")
+
+    total_label_1 = (labels == label_1).sum()
+
+    # Si le total est zéro, renvoie 0 pour éviter la division par zéro
+    if total_label_1 == 0:
+        return 0.0  # Retourne 0 pour éviter le problème de division par zéro
+
+    # Compter les occurrences où les deux labels coexistent
+    co_occurrence = ((labels == label_1) & (labels == label_2)).sum()
+
+    return co_occurrence / total_label_1
+
 
 
 
