@@ -86,7 +86,13 @@ def data_pipeline(csv_path: str, label: str) -> None:
 
 import os
 
+
 def rename_files(path_cut: str, start: float, end: float) -> None:
+    # Vérifier si le chemin existe
+    if not os.path.exists(path_cut):
+        print(f"Erreur : Le chemin spécifié n'existe pas : {path_cut}")
+        return
+
     for filename in os.listdir(path_cut):
         if filename.endswith(".mp3"):
             # Calculer la durée du segment
@@ -109,8 +115,6 @@ def rename_files(path_cut: str, start: float, end: float) -> None:
             else:
                 print(f"Erreur : Le fichier {old_path} n'existe pas.")
 
-# Exemple d'utilisation avec le chemin correct
-rename_files("/Users/mohamedaminsoumih/Desktop/devoirds/data", start=0, end=30)
 
 
 
