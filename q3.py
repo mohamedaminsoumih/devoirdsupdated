@@ -84,10 +84,11 @@ def data_pipeline(csv_path: str, label: str) -> None:
             continue  # Passer à la prochaine vidéo en cas d'erreur
 
 
-import os
-
 
 def rename_files(path_cut: str, start: float, end: float) -> None:
+    """
+    Renomme les fichiers dans le dossier spécifié pour inclure les informations de début, de fin et de durée.
+    """
     # Vérifier si le chemin existe
     if not os.path.exists(path_cut):
         print(f"Erreur : Le chemin spécifié n'existe pas : {path_cut}")
@@ -114,6 +115,10 @@ def rename_files(path_cut: str, start: float, end: float) -> None:
                 print(f"Renamed {filename} to {new_filename}")
             else:
                 print(f"Erreur : Le fichier {old_path} n'existe pas.")
+
+# Exemple d'utilisation avec le chemin correct
+rename_files("/Users/mohamedaminsoumih/Desktop/devoirds/data", start=0, end=30)
+
 
 
 
