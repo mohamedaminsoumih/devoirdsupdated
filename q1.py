@@ -23,8 +23,7 @@ def convert_id(ID: str) -> str:
     """
     Créez une fonction qui prend un ID d'étiquette (par exemple "/m/09x0r") et renvoie le nom d'étiquette correspondant (par exemple "Speech").
     """
-    with open('/Users/mohamedaminsoumih/Desktop/release_fr/data/ontology.json'
-, 'r') as f:
+    with open('/Users/mohamedaminsoumih/Desktop/devoirds/data/audio_segments.csv', 'r') as f:
         ontology = json.load(f)
     
     # Parcourt l'ontologie pour trouver l'ID correspondant
