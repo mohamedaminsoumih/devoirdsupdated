@@ -61,20 +61,22 @@ def contains_label(labels: pd.Series, label: str) -> pd.Series:
 
 
 
-def get_correlation(labels: pd.Series, label_1: str, label_2: str) -> float:
-    # Vérifie que les étiquettes ne sont pas None
-    if labels is None or label_1 is None or label_2 is None:
-        raise ValueError("Les arguments ne doivent pas être None.")
+import pandas as pd
 
-    # Vérifier la présence des labels dans la série
-    if not all(labels.isin([label_1, label_2])):
+def get_correlation(labels: pd.Series, label_1: str, label_2: str) -> float:
+    # Vérifier que labels n'est pas None et qu'il est de type pd.Series
+    if labels is None or not isinstance(labels, pd.Series):
+        raise ValueError("L'argument 'labels' doit être une pandas Series valide.")
+
+    # Vérifie si les labels existent dans la série
+    if label_1 not in labels.values or label_2 not in labels.values:
         raise ValueError(f"Erreur : Les étiquettes '{label_1}' ou '{label_2}' ne sont pas présentes dans la série.")
 
     total_label_1 = (labels == label_1).sum()
 
     # Si le total est zéro, renvoie 0 pour éviter la division par zéro
     if total_label_1 == 0:
-        return 0.0  # Retourne 0 pour éviter le problème de division par zéro
+        return 0.0
 
     # Compter les occurrences où les deux labels coexistent
     co_occurrence = ((labels == label_1) & (labels == label_2)).sum()
