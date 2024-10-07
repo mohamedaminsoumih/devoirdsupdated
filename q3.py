@@ -85,42 +85,32 @@ def data_pipeline(csv_path: str, label: str) -> None:
 
 
 import os
-import re
-import pandas as pd
 
-def rename_files(path_cut: str, csv_path: str) -> None:
-    """
-    Renomme les fichiers dans path_cut pour inclure les heures de début, de fin et la longueur du segment.
-    
-    Arguments:
-    - path_cut: Chemin vers le dossier contenant les fichiers audio coupés.
-    - csv_path: Chemin vers le fichier CSV contenant les informations sur les segments audio.
-    """
-    # Lire le CSV
-    df = pd.read_csv(csv_path)
-    
-    # Parcourir chaque ligne du DataFrame
-    for _, row in df.iterrows():
-        YTID = row['YTID']
-        start_seconds = int(row['start_seconds'])
-        end_seconds = int(row['end_seconds'])
-        length = end_seconds - start_seconds
-        
-        # Construire le nom du fichier d'origine et le nom du fichier à renommer
-        original_file_pattern = re.escape(YTID) + r'.*\.mp3$'
-        new_filename = f"{YTID}_{start_seconds}_{end_seconds}_{length}.mp3"
-        
-        # Parcourir les fichiers dans le répertoire
-        for filename in os.listdir(path_cut):
-            # Si le fichier correspond à l'ID de la vidéo
-            if re.match(original_file_pattern, filename):
-                old_filepath = os.path.join(path_cut, filename)
-                new_filepath = os.path.join(path_cut, new_filename)
-                
-                # Renommer le fichier
-                os.rename(old_filepath, new_filepath)
-                print(f"Renommé : {filename} -> {new_filename}")
-                break
+def rename_files(path_cut: str, start: float, end: float) -> None:
+    for filename in os.listdir(path_cut):
+        if filename.endswith(".mp3"):
+            # Calculer la durée du segment
+            length = end - start
+            
+            # Extraire l'identifiant YouTube (avant ".mp3")
+            ytid = filename.split('.')[0]
+            
+            # Nouveau nom de fichier
+            new_filename = f"{ytid}_{int(start)}_{int(end)}_{int(length)}.mp3"
+            
+            # Chemin complet vers les fichiers
+            old_path = os.path.join(path_cut, filename)
+            new_path = os.path.join(path_cut, new_filename)
+            
+            # Vérifier si le fichier existe avant de renommer
+            if os.path.exists(old_path):
+                os.rename(old_path, new_path)
+                print(f"Renamed {filename} to {new_filename}")
+            else:
+                print(f"Erreur : Le fichier {old_path} n'existe pas.")
+
+# Exemple d'utilisation avec le chemin correct
+rename_files("/Users/mohamedaminsoumih/Desktop/devoirds/data", start=0, end=30)
 
 
 
